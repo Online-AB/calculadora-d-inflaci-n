@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculadora de Inflación - Calculadoradeinflacion</title>
+    <meta name="description" content="Calculadora de Inflación confiable para ajustar valores monetarios en función de la inflación. Herramienta esencial para mantener el poder adquisitivo." />
+    <meta name="keywords" content="calculadora de inflación, ajuste de inflación, IPC Argentina, inflación acumulada, pobreza financiera" />
+    <meta name="author" content="calculadoradeinflacion" />
+    <meta name="robots" content="index, follow" />  
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);
+            color: #222;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 3em;
+            color: #00796b;
+            margin-bottom: 5px;
+            letter-spacing: 1.5px;
+            font-weight: 900;
+        }
+        header p {
+            font-style: italic;
+            color: #004d40;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+        /* Calculator styles */
+        .calculator {
+            max-width: 500px;
+            background: #ffffff;
+            margin: 0 auto 50px;
+            padding: 30px 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 121, 107, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .calculator h2 {
+            color: #004d40;
+            font-weight: 900;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #00796b;
+            display: block;
+            font-size: 1em;
+        }
+        select, input[type="number"] {
+            width: 90%;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 2px solid #004d40;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            font-weight: 600;
+            color: #004d40;
+        }
+        select:focus, input[type="number"]:focus {
+            border-color: #00695c;
+            outline: none;
+            box-shadow: 0 0 8px #009688a8;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #00796b;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            font-size: 1em;
+        }
+        a.calc-link-button {
+            display: block;
+            background: #00796b;
+            color: white;
+            border-radius: 30px;
+            padding: 15px 0;
+            font-size: 1.25em;
+            font-weight: 900;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 121, 107, 0.5);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        a.calc-link-button:hover {
+            background: #004d40;
+        }
+        button.calc-btn {
+            background: #004d40;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 0;
+            font-size: 1.25em;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 77, 64, 0.6);
+        }
+        button.calc-btn:hover {
+            background: #00251a;
+        }
+        .result {
+            margin-top: 20px;
+            background: #b2dfdb;
+            border-left: 6px solid #00796b;
+            padding: 18px 20px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #004d40;
+            border-radius: 10px;
+            min-height: 50px;
+            text-align: center;
+        }
+        /* Article styles */
+        article {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 30px 35px;
+            max-width: 860px;
+            margin: 0 auto 50px;
+            box-shadow: 0 10px 25px rgba(0, 150, 136, 0.3);
+            color: #004d40;
+        }
+        article img {
+            display: block;
+            max-width: 100%;
+            margin: 25px auto 30px auto;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 121, 107, 0.3);
+        }
+        h2, h3 {
+            color: #00796b;
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+        }
+        table {
+            width: 90%;
+            margin: 0 auto 60px;
+            border-collapse: collapse;
+            background: #ffffff;
+            box-shadow: 0 6px 20px rgba(0, 121, 107, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 18px 25px;
+            border-bottom: 1px solid #b2dfdb;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1em;
+            color: #004d40;
+        }
+        th {
+            background-color: #00796b;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+        tbody tr:hover {
+            background-color: #e0f2f1;
+        }
+        /* Button link */
+        a.button-link {
+            display: block;
+            width: 240px;
+            margin: 0 auto 70px;
+            background-color: #004d40;
+            color: white;
+            text-align: center;
+            padding: 18px 0;
+            font-size: 1.3em;
+            border-radius: 35px;
+            text-decoration: none;
+            font-weight: 900;
+            box-shadow: 0 7px 22px rgba(0, 77, 64, 0.7);
+            transition: background-color 0.3s ease;
+        }
+        a.button-link:hover {
+            background-color: #00251a;
+        }
+        /* Author profile */
+        .author-profile {
+            max-width: 860px;
+            margin: 0 auto 60px;
+            background: #004d40;
+            color: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(0,77,64,0.7);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .author-profile img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(255,255,255,0.5);
+        }
+        .author-profile div {
+            max-width: 600px;
+            text-align: center;
+        }
+        .author-profile h3 {
+            margin: 12px 0;
+            font-weight: 900;
+            font-size: 2em;
+            letter-spacing: 0.05em;
+        }
+        .author-profile p {
+            font-style: italic;
+            font-size: 1.1em;
+            line-height: 1.5;
+            color: #b2dfdb;
+        }
+        /* Responsive */
+        @media(max-width: 600px) {
+            .calculator, article, table, .author-profile {
+                width: 95%;
+                padding: 20px;
+            }
+            .author-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-profile div {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calculadoradeinflacion</h1>
+        <p>Guía Completa para Calcular y Entender la Inflación</p>
+    </header>
+
+    <section class="calculator" aria-label="Calculadora de inflación">
+        <h2>Calculadora de Inflación</h2>
+        <label for="amount">Monto a ajustar (ARS):</label>
+        <input type="number" id="amount" placeholder="Ej: 1000" min="0" step="any" />
+
+        <label for="startMonth">Mes inicial:</label>
+        <select id="startMonth" aria-label="Mes inicial">
+            <option value="2023-12">Diciembre 2023</option>
+            <option value="2024-01">Enero 2024</option>
+            <option value="2024-02">Febrero 2024</option>
+            <option value="2024-03">Marzo 2024</option>
+            <option value="2024-04">Abril 2024</option>
+        </select>
+
+        <label for="endMonth">Mes final:</label>
+        <select id="endMonth" aria-label="Mes final">
+            <option value="2024-01">Enero 2024</option>
+            <option value="2024-02" selected>Febrero 2024</option>
+            <option value="2024-03">Marzo 2024</option>
+            <option value="2024-04">Abril 2024</option>
+            <option value="2024-05">Mayo 2024</option>
+        </select>
+
+        <label class="checkbox-label" for="inclusive">
+            <input type="checkbox" id="inclusive" />
+            Incluir mes inicial ("Inclusive")
+        </label>
+
+        <a href="https://calculadorade-inflacion.com/" rel="nofollow" target="_blank" class="calc-link-button">
+            Ir a calculadoradeinflacion
+        </a>
+
+       
+        <div class="result" id="result" aria-live="polite"></div>
+    </section>
+
+    <article>
+        <p>La <strong>calculadoradeinflacion</strong> es una herramienta muy útil para quienes desean ajustar valores monetarios en el tiempo, considerando el efecto de la <strong>inflación</strong>. En países como <strong>Argentina</strong>, donde el aumento de precios es una realidad constante, esta calculadora se vuelve esencial tanto para empresas como para personas que quieren mantener el poder adquisitivo de su dinero.</p>
+
+        <img src="Asm.webp" alt="Gráfico de inflación en Argentina" />
+
+        <p>El funcionamiento se basa en los <strong>índices de precios al consumidor (IPC)</strong> publicados mensualmente por el <strong>INDEC</strong>. A partir de estos datos oficiales, la calculadora permite medir el <strong>incremento</strong> de precios entre dos períodos seleccionados.</p>
+
+        <h2>¿Cómo usar la calculadoradeinflacion?</h2>
+        <ul>
+            <li><strong>Seleccionar región o índice:</strong> En la parte superior, el usuario puede elegir si desea calcular la inflación de una <strong>región</strong> específica del <strong>país</strong> o utilizar el <strong>IPC Nacional</strong>.</li>
+            <li><strong>Ingresar monto a ajustar:</strong> Aunque no es indispensable para calcular la <strong>inflación</strong>, ingresar un <strong>monto</strong> ayuda a conocer de manera directa cuánto valdría ese dinero actualizado al período elegido.</li>
+            <li><strong>Elegir meses de ajuste:</strong> El sistema compara el <strong>índice IPC</strong> del mes inicial contra el del mes final. Si se busca incluir al mes de inicio dentro del cálculo, basta con tildar la opción <strong>“Inclusive”</strong>.</li>
+        </ul>
+
+        <p>🔹 <strong>Ejemplo:</strong> Si seleccionamos de enero <strong>2024</strong> a febrero <strong>2024</strong>, el resultado será la inflación de febrero, ya que se compara enero contra febrero. En cambio, si queremos la inflación acumulada de enero y febrero, deberemos seleccionar diciembre <strong>2023</strong> a febrero <strong>2024</strong>, o bien usar la casilla “Inclusive”.</p>
+
+        <h2>¿Cómo calcular la inflación acumulada en el tiempo?</h2>
+        <p>El <strong>INDEC</strong> publica todos los meses la <strong>inflación</strong> de <strong>Argentina</strong> y los valores del <strong>IPC</strong>. La fórmula básica es:</p>
+        <p><em>Inflación acumulada = ((IPC final - IPC inicial) / IPC inicial) × 100</em></p>
+        <p>Por ejemplo, si en 2016 el <strong>IPC</strong> era 100 y en 2019 subió a 300, la inflación acumulada fue del <strong>200%</strong>.</p>
+        <p>Este método es el más utilizado porque refleja la variación real de los precios entre dos períodos.</p>
+
+        <h2>Usos reales de la calculadoradeinflacion</h2>
+        <ul>
+            <li><strong>Alquileres y contratos:</strong> Permite ajustar el valor de un <strong>contrato de alquiler</strong> según la inflación acumulada.</li>
+            <li><strong>Indemnizaciones y juicios:</strong> Ayuda a actualizar <strong>sumas históricas</strong> a valores actuales.</li>
+            <li><strong>Facturas y deudas:</strong> Facilita calcular cuánto debería cobrarse hoy una deuda generada meses o años atrás.</li>
+            <li><strong>Proyecciones financieras:</strong> Empresas y particulares pueden estimar la evolución de valores tomando como referencia el <strong>REM</strong> u otros supuestos inflacionarios.</li>
+            <li><strong>Créditos UVA y CER:</strong> Se utiliza para ajustar montos según los coeficientes oficiales vinculados al <strong>IPC</strong>.</li>
+        </ul>
+
+        <h2>Preguntas Frecuentes (FAQ)</h2>
+        <ol>
+            <li><strong>¿Qué índice usa la calculadoradeinflacion?</strong><br />Utiliza el <strong>IPC</strong> publicado por el <strong>INDEC</strong>, que mide la variación de precios de bienes y servicios en Argentina.</li>
+            <li><strong>¿Sirve para calcular alquileres?</strong><br />Sí, existen versiones de la <strong>calculadora</strong> adaptadas a contratos de <strong>alquileres</strong>, basados en el <strong>IPC</strong> o el <strong>ICL</strong>, según lo que acuerden las partes.</li>
+            <li><strong>¿Qué significa “Inclusive”?</strong><br />Es una opción que permite incluir el mes inicial dentro del cálculo de inflación acumulada.</li>
+            <li><strong>¿Se puede calcular inflación diaria?</strong><br />No. El <strong>IPC</strong> es mensual. Para cálculos diarios se suele usar el <strong>CER</strong>, que deriva del <strong>IPC</strong>.</li>
+            <li><strong>¿Puedo proyectar inflación futura?</strong><br />Sí, se pueden hacer estimaciones usando valores supuestos (por ejemplo, proyecciones del <strong>REM</strong>), pero no son datos oficiales.</li>
+        </ol>
+
+        <p>👉 En conclusión, la <strong>calculadoradeinflacion</strong> es una herramienta confiable para actualizar valores monetarios y comprender el impacto de la inflación en el tiempo. Gracias al uso de datos del <strong>INDEC</strong> y del <strong>IPC</strong>, brinda un cálculo preciso y transparente que facilita la toma de decisiones financieras.</p>
+    </article>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Elemento</th>
+                <th>Descripción</th>
+                <th>Ejemplo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ingreso de monto</td>
+                <td>Valor original a ajustar por inflación</td>
+                <td>$1,000</td>
+            </tr>
+            <tr>
+                <td>Selección de período</td>
+                <td>Mes inicial y mes final para cálculo</td>
+                <td>Enero 2024 - Febrero 2024</td>
+            </tr>
+            <tr>
+                <td>Opción "Inclusive"</td>
+                <td>Incluir mes inicial en cálculo de inflación acumulada</td>
+                <td>Marcado / No marcado</td>
+            </tr>
+            <tr>
+                <td>Índice usado</td>
+                <td>IPC nacional o regional del INDEC</td>
+                <td>IPC Nacional</td>
+            </tr>
+            <tr>
+                <td>Resultado</td>
+                <td>Inflación acumulada en % y valor ajustado</td>
+                <td>15.5% / $1,155</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="https://calculadorade-inflacion.com/" rel="nofollow" target="_blank" class="button-link" >
+      calculadoradeinflacion
+    </a>
+
+    <section class="author-profile" aria-label="Perfil del autor">
+        <img src="Asm.webp" alt="Foto del autor Carlos Méndez" />
+        <div>
+            <h3>Author</h3>
+            <p>Experto en finanzas y economía con más de 10 años ayudando a comprender la inflación y sus efectos en Argentina. Apasionado por la educación financiera práctica.</p>
+        </div>
+    </section>
+
+    <script>
+        // Simulated IPC data example for demonstration
+        const ipcData = {
+            "2023-12": 140.0,
+            "2024-01": 143.0,
+            "2024-02": 145.5,
+            "2024-03": 147.0,
+            "2024-04": 150.0,
+            "2024-05": 153.0
+        };
+
+        function calculateInflation() {
+            const amountInput = document.getElementById("amount");
+            const startMonth = document.getElementById("startMonth").value;
+            const endMonth = document.getElementById("endMonth").value;
+            const inclusive = document.getElementById("inclusive").checked;
+            const resultDiv = document.getElementById("result");
+            const amount = parseFloat(amountInput.value);
+
+            if (isNaN(amount) || amount <= 0) {
+                resultDiv.textContent = "Por favor, ingrese un monto válido mayor a cero.";
+                return;
+            }
+            if (!(startMonth in ipcData) || !(endMonth in ipcData)) {
+                resultDiv.textContent = "Por favor, seleccione meses válidos.";
+                return;
+            }
+
+            let startIndex = Object.keys(ipcData).indexOf(startMonth);
+            let endIndex = Object.keys(ipcData).indexOf(endMonth);
+
+            if (inclusive) {
+                if (startIndex > 0) startIndex -= 1;
+            }
+
+            if (startIndex < 0) startIndex = 0;
+
+            if (endIndex < startIndex) {
+                resultDiv.textContent = "El mes final debe ser igual o posterior al mes inicial.";
+                return;
+            }
+
+            const months = Object.keys(ipcData).slice(startIndex, endIndex + 1);
+
+            const ipcStart = ipcData[months[0]];
+            const ipcEnd = ipcData[months[months.length - 1]];
+            const inflationRate = ((ipcEnd - ipcStart) / ipcStart) * 100;
+            const adjustedAmount = amount + (amount * inflationRate / 100);
+
+            resultDiv.innerHTML = `Inflación acumulada: <strong>${inflationRate.toFixed(2)}%</strong> <br/>
+                                   Valor ajustado: <strong>$${adjustedAmount.toFixed(2)}</strong>`;
+        }
+    </script>
+</body>
+</html>
